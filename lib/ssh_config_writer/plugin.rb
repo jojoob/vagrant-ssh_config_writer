@@ -8,12 +8,22 @@ module VagrantPlugins
       The SSH config writer writes the ssh config of the current machine to a file in the Vagrantfile location.
       EOF
       
-      action_hook("write_ssh_config", :machine_action_up) do |hook|
+      action_hook(:write_ssh_config, :machine_action_up) do |hook|
         require_relative "action_writesshconfig"
         hook.append(ActionWriteSSHConfig)
       end
 
-      action_hook("delete_ssh_config", :machine_action_halt) do |hook|
+      action_hook(:write_ssh_config, :machine_action_resume) do |hook|
+        require_relative "action_writesshconfig"
+        hook.append(ActionWriteSSHConfig)
+      end
+
+      action_hook(:delete_ssh_config, :machine_action_halt) do |hook|
+        require_relative "action_deletesshconfig"
+        hook.append(ActionDeleteSSHConfig)
+      end
+
+      action_hook(:delete_ssh_config, :machine_action_destroy) do |hook|
         require_relative "action_deletesshconfig"
         hook.append(ActionDeleteSSHConfig)
       end
